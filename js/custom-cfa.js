@@ -36,4 +36,30 @@ function showMap(err, data) {
             }
         }
     });
+
+    function populateGithubUsers(username_list){
+        // console.log(github_userlist);
+        for(index in username_list){
+            github_username = username_list[index];
+
+            $.getJSON('https://api.github.com/users/'+github_username, function(data){
+                target_user_elm = $(".team-container h3[data-github-user='" + data.login + "']");
+
+                target_user_elm.prev('img').attr('src', data.avatar_url+'&size=200');
+            });  
+        }  
+    }
+
+    $(document).ready(function(){
+        github_userlist = [];
+
+        $(".team-container h3[data-github-user]").each(function(){
+            user_h3 = $(this);
+
+            github_username = $(this).attr('data-github-user');
+            github_userlist.push(github_username);
+        });
+
+        populateGithubUsers(github_userlist);
+    });
 })(jQuery);
